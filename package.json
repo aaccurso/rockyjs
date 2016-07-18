@@ -1,0 +1,22 @@
+{
+  "name": "rockyjs",
+  "version": "1.0.0",
+  "description": "Simple MV* library that leverages vanilla ES2015 Javascript features.",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaccurso/rockyjs.git"
+  },
+  "author": "aaccurso",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aaccurso/rockyjs/issues"
+  },
+  "homepage": "https://github.com/aaccurso/rockyjs#readme",
+  "devDependencies": {
+    "babel-core": "^6.10.4",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "webpack": "^1.13.1"
+  }
+}
