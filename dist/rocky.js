@@ -47,7 +47,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+	  value: true
 	});
 	exports.bootstrap = exports.component = exports.service = undefined;
 
@@ -62,7 +62,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function bootstrap() {
-		_component2.default.bootstrap();
+	  _component2.default.bootstrap();
 	}
 
 	exports.service = _service2.default;
@@ -76,21 +76,22 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+	  value: true
 	});
 	exports.default = {
-		services: new Map(),
-		register: function register(serviceName, serviceFunction) {
-			this.services.set(serviceName, serviceFunction());
-		},
-		getDependencies: function getDependencies(componentInit) {
-			var _this = this;
+	  services: new Map(),
+	  register: function register(serviceName, serviceFunction) {
+	    this.services.set(serviceName, serviceFunction());
+	  },
+	  getDependencies: function getDependencies(componentInit) {
+	    var _this = this;
 
-			var dependencyNames = getParamNames(componentInit);
-			return dependencyNames.map(function (dependencyName) {
-				return _this.services.get(dependencyName);
-			});
-		}
+	    var dependencyNames = getParamNames(componentInit);
+
+	    return dependencyNames.map(function (dependencyName) {
+	      return _this.services.get(dependencyName);
+	    });
+	  }
 	};
 
 	// http://stackoverflow.com/questions/1007981/how-to-get-function-parameter-names-values-dynamically-from-javascript
@@ -98,9 +99,10 @@
 	var STRIP_COMMENTS = /(\/\/.*$)|(\/\*[\s\S]*?\*\/)|(\s*=[^,\)]*(('(?:\\'|[^'\r\n])*')|("(?:\\"|[^"\r\n])*"))|(\s*=[^,\)]*))/mg;
 	var ARGUMENT_NAMES = /([^\s,]+)/g;
 	function getParamNames(func) {
-		var fnStr = func.toString().replace(STRIP_COMMENTS, '');
-		var result = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
-		return result || [];
+	  var fnStr = func.toString().replace(STRIP_COMMENTS, '');
+	  var result = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
+
+	  return result || [];
 	}
 	module.exports = exports['default'];
 
@@ -111,7 +113,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+	  value: true
 	});
 
 	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
@@ -123,49 +125,58 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = {
-		components: new Map(),
-		register: function register(componentName, componentObject) {
-			this.components.set(componentName, componentObject);
-		},
-		bootstrap: function bootstrap() {
-			var _iteratorNormalCompletion = true;
-			var _didIteratorError = false;
-			var _iteratorError = undefined;
+	  components: new Map(),
+	  register: function register(componentName, componentObject) {
+	    this.components.set(componentName, componentObject);
+	  },
+	  bootstrap: function bootstrap() {
+	    var _iteratorNormalCompletion = true;
+	    var _didIteratorError = false;
+	    var _iteratorError = undefined;
 
-			try {
-				var _loop = function _loop() {
-					var _step$value = _slicedToArray(_step.value, 2);
+	    try {
+	      var _loop = function _loop() {
+	        var _step$value = _slicedToArray(_step.value, 2);
 
-					componentName = _step$value[0];
-					componentObject = _step$value[1];
+	        componentName = _step$value[0];
+	        componentObject = _step$value[1];
 
-					var componentDOM = document.querySelector(componentName);
-					var dependencies = _service2.default.getDependencies(componentObject.init);
-					componentObject.init.apply(componentObject, dependencies).then(function (scope) {
-						componentDOM.innerHTML = Handlebars.compile(componentObject.template)(scope);
-					});
-				};
+	        var componentDOMElements = document.querySelectorAll(componentName);
+	        var dependencies = _service2.default.getDependencies(componentObject.init);
 
-				for (var _iterator = this.components[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-					var componentName, componentObject;
+	        componentDOMElements.forEach(function (componentDOMElement) {
+	          var properties = {
+	            element: componentDOMElement,
+	            attributes: componentDOMElement.attributes
+	          };
+	          var componentObjectInstance = Object.assign({}, properties, componentObject);
 
-					_loop();
-				}
-			} catch (err) {
-				_didIteratorError = true;
-				_iteratorError = err;
-			} finally {
-				try {
-					if (!_iteratorNormalCompletion && _iterator.return) {
-						_iterator.return();
-					}
-				} finally {
-					if (_didIteratorError) {
-						throw _iteratorError;
-					}
-				}
-			}
-		}
+	          componentObjectInstance.init.apply(componentObjectInstance, dependencies).then(function (scope) {
+	            componentDOMElement.innerHTML = Handlebars.compile(componentObjectInstance.template)(scope);
+	          });
+	        });
+	      };
+
+	      for (var _iterator = this.components[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	        var componentName, componentObject;
+
+	        _loop();
+	      }
+	    } catch (err) {
+	      _didIteratorError = true;
+	      _iteratorError = err;
+	    } finally {
+	      try {
+	        if (!_iteratorNormalCompletion && _iterator.return) {
+	          _iterator.return();
+	        }
+	      } finally {
+	        if (_didIteratorError) {
+	          throw _iteratorError;
+	        }
+	      }
+	    }
+	  }
 	};
 	module.exports = exports['default'];
 
